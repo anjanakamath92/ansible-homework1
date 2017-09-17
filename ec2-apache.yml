@@ -1,0 +1,25 @@
+- name: Configure instance(s)
+  hosts: webserver
+  sudo: yes
+  remote_user: ec2-user
+  gather_facts: False
+  vars:
+   ansible_ssh_private_key_file: access-key.pem
+  tasks:
+   - name: Upgradeing Repo
+     raw: sudo yum -y update
+   - name: install  python
+     raw: sudo yum -y install python
+   - name: install apache
+     raw: sudo yum -y install httpd
+     #apt: pkg=apache2 state=installed
+   - name: Start Apache
+     service: name=httpd state=started
+   - name: Create Hello World
+     raw: echo "Hello World" > /var/www/html/index.html
+
+
+   - name: remove the Apache package
+     yum:
+       name: httpd
+       state: absent
